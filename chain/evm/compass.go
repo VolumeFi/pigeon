@@ -366,7 +366,7 @@ func (t compass) isArbitraryCallAlreadyExecuted(ctx context.Context, messageID u
 		},
 		Topics: [][]common.Hash{
 			{
-				crypto.Keccak256Hash([]byte("LagicCallEvent(address,bytes,uint256)")),
+				crypto.Keccak256Hash([]byte("LogicCallEvent(address,bytes,uint256)")),
 				common.Hash{},
 				common.Hash{},
 				crypto.Keccak256Hash(new(big.Int).SetInt64(int64(messageID)).Bytes()),
