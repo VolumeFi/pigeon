@@ -174,6 +174,13 @@ func (t compass) submitLogicCall(
 	msg *types.SubmitLogicCall,
 	origMessage chain.MessageWithSignatures,
 ) (*ethtypes.Transaction, error) {
+	logger := log.WithFields(log.Fields{
+		"chain-reference-id": t.ChainReferenceID,
+		"queue-name":         queueTypeName,
+		"msg-address":        fmt.Sprintf("%v", msg.GetHexContractAddress()),
+		"msg-payload":        fmt.Sprintf("%v", msg.GetPayload()),
+	})
+	logger.Debug("submit-logic-call")
 	return whoops.TryVal(func() *ethtypes.Transaction {
 		executed, err := t.isArbitraryCallAlreadyExecuted(ctx, origMessage.ID)
 		whoops.Assert(err)
