@@ -186,6 +186,7 @@ func callSmartContract(
 
 		"signing-addr": args.signingAddr,
 	})
+	logger.Debug("call-smart-contract")
 	return whoops.TryVal(func() *etherumtypes.Transaction {
 		packedBytes, err := args.abi.Pack(
 			args.method,
