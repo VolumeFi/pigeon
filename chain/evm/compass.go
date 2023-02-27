@@ -181,8 +181,8 @@ func (t compass) submitLogicCall(
 		"msg-payload":        fmt.Sprintf("%v", msg.GetPayload()),
 	})
 	logger.Debug("submit-logic-call")
-	log.WithField("position", "0").Debug("submit-logic-call-0")
 	return whoops.TryVal(func() *ethtypes.Transaction {
+		log.WithField("position", "0").Debug("submit-logic-call-0")
 		executed, err := t.isArbitraryCallAlreadyExecuted(ctx, origMessage.ID)
 		whoops.Assert(err)
 		if executed {
