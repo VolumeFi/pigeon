@@ -181,37 +181,38 @@ func (t compass) submitLogicCall(
 		"msg-payload":        fmt.Sprintf("%v", msg.GetPayload()),
 	})
 	logger.Debug("submit-logic-call")
+	log.WithField("position", "0").Debug("submit-logic-call-0")
 	return whoops.TryVal(func() *ethtypes.Transaction {
 		executed, err := t.isArbitraryCallAlreadyExecuted(ctx, origMessage.ID)
 		whoops.Assert(err)
 		if executed {
 			return nil
 		}
-		log.WithField("position", "1").Debug("submit-logic-call")
+		log.WithField("position", "1").Debug("submit-logic-call-1")
 		valsetID, err := t.findLastValsetMessageID(ctx)
 		whoops.Assert(err)
-		log.WithField("position", "2").Debug("submit-logic-call")
+		log.WithField("position", "2").Debug("submit-logic-call-2")
 		valset, err := t.paloma.QueryGetEVMValsetByID(ctx, valsetID, t.ChainReferenceID)
 		whoops.Assert(err)
-		log.WithField("position", "3").Debug("submit-logic-call")
+		log.WithField("position", "3").Debug("submit-logic-call-3")
 		consensusReached := isConsensusReached(valset, origMessage)
 		if !consensusReached {
 			whoops.Assert(ErrNoConsensus)
 		}
-		log.WithField("position", "4").Debug("submit-logic-call")
+		log.WithField("position", "4").Debug("submit-logic-call-4")
 		con := BuildCompassConsensus(ctx, valset, origMessage.Signatures)
 		compassArgs := CompassLogicCallArgs{
 			LogicContractAddress: common.HexToAddress(msg.GetHexContractAddress()),
 			Payload:              msg.GetPayload(),
 		}
-		log.WithField("position", "5").Debug("submit-logic-call")
+		log.WithField("position", "5").Debug("submit-logic-call-5")
 		tx, err := t.callCompass(ctx, "submit_logic_call", []any{
 			con,
 			compassArgs,
 			new(big.Int).SetInt64(int64(origMessage.ID)),
 			new(big.Int).SetInt64(msg.GetDeadline()),
 		})
-		log.WithField("position", "6").Debug("submit-logic-call")
+		log.WithField("position", "6").Debug("submit-logic-call-6")
 		if err != nil {
 			isSmartContractError := whoops.Must(t.tryProvidingEvidenceIfSmartContractErr(ctx, queueTypeName, origMessage.ID, err))
 			if isSmartContractError {
