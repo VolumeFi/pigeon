@@ -354,7 +354,7 @@ func filterLogs(
 	log.
 		WithField("current-block-height", currBlockHeight).
 		WithField("filter-query", fq).
-		Trace("filtering logs")
+		Debug("filtering logs")
 
 	if currBlockHeight == nil {
 		header, err := ethClient.HeaderByNumber(ctx, nil)
