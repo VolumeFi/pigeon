@@ -372,10 +372,11 @@ func (t compass) isArbitraryCallAlreadyExecuted(ctx context.Context, messageID u
 				crypto.Keccak256Hash(new(big.Int).SetInt64(int64(messageID)).Bytes()),
 			},
 		},
+		FromBlock: big.NewInt(t.startingBlockHeight),
 	}
 
 	var found bool
-	_, err := t.evm.FilterLogs(ctx, filter, big.NewInt(t.startingBlockHeight), func(logs []etherumtypes.Log) bool {
+	_, err := t.evm.FilterLogs(ctx, filter, nil, func(logs []etherumtypes.Log) bool {
 		found = len(logs) > 0
 		return !found
 	})
