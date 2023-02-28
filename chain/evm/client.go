@@ -374,7 +374,7 @@ func filterLogs(
 	}
 
 	logs, err := ethClient.FilterLogs(ctx, fq)
-
+	log.WithField("error message", err.Error()).Debug("error-in-filter-log")
 	switch {
 	case err == nil:
 		// awesome!
