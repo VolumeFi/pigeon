@@ -341,7 +341,7 @@ func (t compass) findLastValsetMessageID(ctx context.Context) (uint64, error) {
 		}
 		return false
 	})
-
+	log.WithField("latestMessageID", latestMessageID).Debug("filter-logs-end")
 	var g whoops.Group
 
 	if latestMessageID.Uint64() == 0 {
