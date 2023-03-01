@@ -360,6 +360,15 @@ func (t compass) findLastValsetMessageID(ctx context.Context) (uint64, error) {
 }
 
 func (t compass) isArbitraryCallAlreadyExecuted(ctx context.Context, messageID uint64) (bool, error) {
+	client := t.evm.(Client)
+	header, err := client.conn.HeaderByNumber(ctx, nil)
+	if err != nil {
+		return false, err
+	}
+
+	var fromBlock *big.Int
+	fromBlock.Sub(header.Number, big.NewInt(9999))
+
 	filter := etherum.FilterQuery{
 		Addresses: []common.Address{
 			t.smartContractAddr,
@@ -372,11 +381,11 @@ func (t compass) isArbitraryCallAlreadyExecuted(ctx context.Context, messageID u
 				crypto.Keccak256Hash(new(big.Int).SetInt64(int64(messageID)).Bytes()),
 			},
 		},
-		FromBlock: big.NewInt(t.startingBlockHeight),
+		FromBlock: fromBlock,
 	}
 
 	var found bool
-	_, err := t.evm.FilterLogs(ctx, filter, nil, func(logs []etherumtypes.Log) bool {
+	_, err = t.evm.FilterLogs(ctx, filter, nil, func(logs []etherumtypes.Log) bool {
 		found = len(logs) > 0
 		return !found
 	})
