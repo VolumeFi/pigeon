@@ -40,6 +40,7 @@ type evmClienter interface {
 
 	BalanceAt(ctx context.Context, address common.Address, blockHeight uint64) (*big.Int, error)
 	FindBlockNearestToTime(ctx context.Context, startingHeight uint64, when time.Time) (uint64, error)
+	FindCurrentBlockNumber(ctx context.Context) (*big.Int, error)
 }
 
 type compass struct {
@@ -360,14 +361,14 @@ func (t compass) findLastValsetMessageID(ctx context.Context) (uint64, error) {
 }
 
 func (t compass) isArbitraryCallAlreadyExecuted(ctx context.Context, messageID uint64) (bool, error) {
-	client := t.evm.(*Client)
-	header, err := client.conn.HeaderByNumber(ctx, nil)
+	blockNumber, err := t.evm.FindCurrentBlockNumber(ctx)
+
 	if err != nil {
 		return false, err
 	}
 
 	var fromBlock *big.Int
-	fromBlock.Sub(header.Number, big.NewInt(9999))
+	fromBlock.Sub(blockNumber, big.NewInt(9999))
 
 	filter := etherum.FilterQuery{
 		Addresses: []common.Address{
@@ -381,7 +382,7 @@ func (t compass) isArbitraryCallAlreadyExecuted(ctx context.Context, messageID u
 				crypto.Keccak256Hash(new(big.Int).SetInt64(int64(messageID)).Bytes()),
 			},
 		},
-		FromBlock: fromBlock,
+		FromBlock: blockNumber,
 	}
 
 	var found bool
