@@ -360,7 +360,7 @@ func (t compass) findLastValsetMessageID(ctx context.Context) (uint64, error) {
 }
 
 func (t compass) isArbitraryCallAlreadyExecuted(ctx context.Context, messageID uint64) (bool, error) {
-	client := t.evm.(Client)
+	client := t.evm.(*Client)
 	header, err := client.conn.HeaderByNumber(ctx, nil)
 	if err != nil {
 		return false, err
