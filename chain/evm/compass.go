@@ -367,7 +367,7 @@ func (t compass) isArbitraryCallAlreadyExecuted(ctx context.Context, messageID u
 		return false, err
 	}
 	log.WithField("block-number", blockNumber.Text(10)).Debug("current-block-number")
-	var fromBlock *big.Int
+	fromBlock := *big.NewInt(0)
 	fromBlock.Sub(blockNumber, big.NewInt(9999))
 	log.WithField("block-number", fromBlock.Text(10)).Debug("current-block-number")
 	filter := etherum.FilterQuery{
