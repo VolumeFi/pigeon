@@ -366,7 +366,7 @@ func (t compass) isArbitraryCallAlreadyExecuted(ctx context.Context, messageID u
 	if err != nil {
 		return false, err
 	}
-
+	log.WithField("block-number", blockNumber.Text(10))
 	var fromBlock *big.Int
 	fromBlock.Sub(blockNumber, big.NewInt(9999))
 
