@@ -361,13 +361,13 @@ func (t compass) findLastValsetMessageID(ctx context.Context) (uint64, error) {
 }
 
 func (t compass) isArbitraryCallAlreadyExecuted(ctx context.Context, messageID uint64) (bool, error) {
-	log.WithField("is-arbitrary-call-already-executed", messageID)
+	log.WithField("message-id", messageID).Debug("is-arbitrary-call-already-executed")
 	blockNumber, err := t.evm.FindCurrentBlockNumber(ctx)
 
 	if err != nil {
 		return false, err
 	}
-	log.WithField("block-number", blockNumber.Text(10))
+	log.WithField("block-number", blockNumber.Text(10)).Debug("current-block-number")
 	var fromBlock *big.Int
 	fromBlock.Sub(blockNumber, big.NewInt(9999))
 
