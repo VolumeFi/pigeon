@@ -361,7 +361,6 @@ func (t compass) findLastValsetMessageID(ctx context.Context) (uint64, error) {
 }
 
 func (t compass) isArbitraryCallAlreadyExecuted(ctx context.Context, messageID uint64) (bool, error) {
-	log.WithField("message-id", messageID).Debug("is-arbitrary-call-already-executed")
 	blockNumber, err := t.evm.FindCurrentBlockNumber(ctx)
 
 	if err != nil {
@@ -370,7 +369,7 @@ func (t compass) isArbitraryCallAlreadyExecuted(ctx context.Context, messageID u
 	log.WithField("block-number", blockNumber.Text(10)).Debug("current-block-number")
 	var fromBlock *big.Int
 	fromBlock.Sub(blockNumber, big.NewInt(9999))
-
+	log.WithField("block-number", fromBlock.Text(10)).Debug("current-block-number")
 	filter := etherum.FilterQuery{
 		Addresses: []common.Address{
 			t.smartContractAddr,
