@@ -377,7 +377,7 @@ func filterLogs(
 	if err != nil {
 		log.WithField("error message", err.Error()).Debug("error-in-filter-log")
 	}
-	log.Debug("filter-logs-3")
+	log.WithField("log-length", len(logs)).Debug("filter-logs-3")
 	switch {
 	case err == nil:
 		// awesome!

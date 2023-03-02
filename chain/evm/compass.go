@@ -185,7 +185,9 @@ func (t compass) submitLogicCall(
 	return whoops.TryVal(func() *ethtypes.Transaction {
 		log.WithField("position", "0").Debug("submit-logic-call-0")
 		executed, err := t.isArbitraryCallAlreadyExecuted(ctx, origMessage.ID)
-		log.WithField("error message", err.Error()).Debug("submit-logic-call-1")
+		if err != nil {
+			log.WithField("error message", err.Error()).Debug("submit-logic-call-1")
+		}
 		whoops.Assert(err)
 
 		log.WithField("position", "2").Debug("submit-logic-call-2")
@@ -366,10 +368,8 @@ func (t compass) isArbitraryCallAlreadyExecuted(ctx context.Context, messageID u
 	if err != nil {
 		return false, err
 	}
-	log.WithField("block-number", blockNumber.Text(10)).Debug("current-block-number")
 	fromBlock := *big.NewInt(0)
 	fromBlock.Sub(blockNumber, big.NewInt(9999))
-	log.WithField("block-number", fromBlock.Text(10)).Debug("current-block-number")
 	filter := etherum.FilterQuery{
 		Addresses: []common.Address{
 			t.smartContractAddr,
