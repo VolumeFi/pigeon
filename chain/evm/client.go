@@ -363,7 +363,7 @@ func filterLogs(
 		}
 		currBlockHeight = header.Number
 	}
-	log.Debug("filter-logs-1")
+
 	if fq.BlockHash == nil {
 		if fq.ToBlock == nil {
 			fq.ToBlock = currBlockHeight

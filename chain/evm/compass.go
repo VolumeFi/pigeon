@@ -194,7 +194,9 @@ func (t compass) submitLogicCall(
 		if executed {
 			return nil
 		}
+		log.WithField("position", "3").Debug("submit-logic-call-3")
 		valsetID, err := t.findLastValsetMessageID(ctx)
+		log.WithField("position", "4").Debug("submit-logic-call-4")
 		whoops.Assert(err)
 		valset, err := t.paloma.QueryGetEVMValsetByID(ctx, valsetID, t.ChainReferenceID)
 		whoops.Assert(err)
