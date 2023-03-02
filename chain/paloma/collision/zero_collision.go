@@ -93,8 +93,6 @@ func GoStartLane(ctx context.Context, p palomer, me sdk.ValAddress) (context.Con
 	ctx, cancelCtx := context.WithCancel(ctx)
 
 	go func() {
-		defer cancelCtx()
-
 		ticker := time.NewTicker(tickerTimeout)
 		defer ticker.Stop()
 
@@ -108,6 +106,10 @@ func GoStartLane(ctx context.Context, p palomer, me sdk.ValAddress) (context.Con
 				}
 				newBlockHeight = roundBlockHeight(newBlockHeight)
 				if newBlockHeight != blockHeight {
+					log.
+						WithField("blockHeight", blockHeight).
+						WithField("newBlockHeight", newBlockHeight).
+						Error("block height is unexpected")
 					return
 				}
 			case <-ctx.Done():
