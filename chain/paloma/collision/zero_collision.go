@@ -93,6 +93,8 @@ func GoStartLane(ctx context.Context, p palomer, me sdk.ValAddress) (context.Con
 	ctx, cancelCtx := context.WithCancel(ctx)
 
 	go func() {
+		defer cancelCtx()
+
 		ticker := time.NewTicker(tickerTimeout)
 		defer ticker.Stop()
 
