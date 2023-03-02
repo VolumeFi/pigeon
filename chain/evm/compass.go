@@ -185,10 +185,10 @@ func (t compass) submitLogicCall(
 	return whoops.TryVal(func() *ethtypes.Transaction {
 		log.WithField("position", "0").Debug("submit-logic-call-0")
 		executed, err := t.isArbitraryCallAlreadyExecuted(ctx, origMessage.ID)
-		log.WithField("position", err.Error()).Debug("submit-logic-call-1")
+		log.WithField("error message", err.Error()).Debug("submit-logic-call-1")
 		whoops.Assert(err)
 
-		log.WithField("position", "2").Debug("submit-logic-call-1")
+		log.WithField("position", "2").Debug("submit-logic-call-2")
 		if executed {
 			return nil
 		}

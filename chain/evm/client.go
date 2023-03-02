@@ -363,7 +363,7 @@ func filterLogs(
 		}
 		currBlockHeight = header.Number
 	}
-
+	log.Debug("filter-logs-1")
 	if fq.BlockHash == nil {
 		if fq.ToBlock == nil {
 			fq.ToBlock = currBlockHeight
@@ -372,11 +372,12 @@ func filterLogs(
 			fq.FromBlock = big.NewInt(0)
 		}
 	}
-
+	log.Debug("filter-logs-2")
 	logs, err := ethClient.FilterLogs(ctx, fq)
 	if err != nil {
 		log.WithField("error message", err.Error()).Debug("error-in-filter-log")
 	}
+	log.Debug("filter-logs-3")
 	switch {
 	case err == nil:
 		// awesome!
