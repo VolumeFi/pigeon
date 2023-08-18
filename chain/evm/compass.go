@@ -609,9 +609,10 @@ func isConsensusReached(val *types.Valset, msg chain.MessageWithSignatures) bool
 	for _, sig := range msg.Signatures {
 		signaturesMap[sig.SignedByAddress] = sig
 	}
-	log.WithFields(log.Fields{
+	logger := log.WithFields(log.Fields{
 		"validators-size": len(val.Validators),
-	}).Debug("confirming consensus reached")
+	})
+	logger.Debug("confirming consensus reached")
 	var s uint64
 	for i := range val.Validators {
 		logger := log.WithFields(log.Fields{
@@ -644,11 +645,20 @@ func isConsensusReached(val *types.Valset, msg chain.MessageWithSignatures) bool
 		if val == recoveredAddr.Hex() {
 			s += pow
 		}
-		logger.Debug("good consensus")
+		logger.WithFields(log.Fields{
+			"pow": pow,
+			"s":   s,
+		}).Debug("good consensus")
 	}
+	logger = logger.WithFields(log.Fields{
+		"s":              s,
+		"powerThreshold": powerThreshold,
+	})
 	if s >= powerThreshold {
+		logger.Debug("consensus reached")
 		return true
 	}
+	logger.Debug("consensus not reached")
 	return false
 }
 
