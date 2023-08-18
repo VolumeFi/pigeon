@@ -191,12 +191,15 @@ func (t compass) submitLogicCall(
 		if !consensusReached {
 			whoops.Assert(ErrNoConsensus)
 		}
+		log.Debug("DEBUG 1")
 
 		con := BuildCompassConsensus(ctx, valset, origMessage.Signatures)
+		log.Debug("DEBUG 2")
 		compassArgs := CompassLogicCallArgs{
 			LogicContractAddress: common.HexToAddress(msg.GetHexContractAddress()),
 			Payload:              msg.GetPayload(),
 		}
+		log.Debug("DEBUG 3")
 
 		tx, err := t.callCompass(ctx, "submit_logic_call", []any{
 			con,
@@ -204,13 +207,28 @@ func (t compass) submitLogicCall(
 			new(big.Int).SetInt64(int64(origMessage.ID)),
 			new(big.Int).SetInt64(msg.GetDeadline()),
 		})
+		log.WithFields(log.Fields{
+			"tx":  tx,
+			"err": err,
+		}).Debug("DEBUG 4")
 		if err != nil {
+			log.Debug("DEBUG 4.1")
 			isSmartContractError := whoops.Must(t.SetErrorData(ctx, queueTypeName, origMessage.ID, err))
+			log.Debug("DEBUG 4.2")
 			if isSmartContractError {
+				log.Debug("DEBUG 4.2.1")
 				return nil
 			}
+			log.WithFields(log.Fields{
+				"err": err,
+			}).Debug("DEBUG 4.3")
 			whoops.Assert(err)
+			log.Debug("DEBUG 4.4")
 		}
+		log.WithFields(log.Fields{
+			"tx":  tx,
+			"err": err,
+		}).Debug("DEBUG 5")
 
 		return tx
 	})
@@ -595,10 +613,12 @@ func isConsensusReached(val *types.Valset, msg chain.MessageWithSignatures) bool
 	}).Debug("confirming consensus reached")
 	var s uint64
 	for i := range val.Validators {
+		logger := log.WithFields(log.Fields{
+			"i": i,
+		})
 		val, pow := val.Validators[i], val.Powers[i]
 		sig, ok := signaturesMap[val]
-		log.WithFields(log.Fields{
-			"i":         i,
+		logger.WithFields(log.Fields{
 			"validator": val,
 			"power":     pow,
 		}).Debug("checking consensus")
@@ -613,23 +633,17 @@ func isConsensusReached(val *types.Valset, msg chain.MessageWithSignatures) bool
 		if err != nil {
 			continue
 		}
-		log.WithFields(log.Fields{
-			"i": i,
-		}).Debug("good ecrecover")
+		logger.Debug("good ecrecover")
 		pk, err := crypto.UnmarshalPubkey(recoveredPK)
 		if err != nil {
 			continue
 		}
-		log.WithFields(log.Fields{
-			"i": i,
-		}).Debug("good unmarshal")
+		logger.Debug("good unmarshal")
 		recoveredAddr := crypto.PubkeyToAddress(*pk)
 		if val == recoveredAddr.Hex() {
 			s += pow
 		}
-		log.WithFields(log.Fields{
-			"i": i,
-		}).Debug("good consensus")
+		logger.Debug("good consensus")
 	}
 	if s >= powerThreshold {
 		return true
