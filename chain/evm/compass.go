@@ -187,6 +187,7 @@ func (t compass) submitLogicCall(
 		valset, err := t.paloma.QueryGetEVMValsetByID(ctx, valsetID, t.ChainReferenceID)
 		whoops.Assert(err)
 
+		log.Debug("DEBUG 0")
 		consensusReached := isConsensusReached(valset, origMessage)
 		if !consensusReached {
 			whoops.Assert(ErrNoConsensus)
