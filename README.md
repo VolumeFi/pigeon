@@ -218,6 +218,29 @@ evm:
 
 ```
 
+### MEV protection
+
+Validators may utilize [Bloxroute Frontrunning Protection](https://bloxroute.com/products/) in order to have their transactions MEV secured. At the moment, supported chains include Ethereum Mainnet, BSC Mainnet and Polygon Mainnet. Setting your validator up to support messages with MEV protection will not only mark your node as eligible for relaying said messages, but also increase the likelyhood of being chosen to relay regular messages as well.
+
+In order to setup your instance for MEV protection support, you will have to:
+
+1. Create an account with [https://bloxroute.com/](https://bloxroute.com/) and get your authorization header
+2. Setup your auth header secret and update your `~/.pigeon/config.yaml` like this:
+
+```yaml
+loop-timeout: 5s
+health-check-port: {{ PIGEON_HEALTHCHECK_PORT }}
+bloxroute-auth-header: {{ BLXR_AUTH_HEADER }}
+```
+
+3. For every chain you wish to support, add the following configuration key to its chain config. Supported chains include `eth-main`, `bnb-main` and `matic-main`:
+
+```yaml
+bloxroute-mev-enabled: true
+```
+
+4. Restart pigeon.
+
 
 ### Start pigeon
 
