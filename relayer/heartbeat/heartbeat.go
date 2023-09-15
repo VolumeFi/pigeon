@@ -80,15 +80,10 @@ func (m *Heart) SetRetryFalloff(falloff time.Duration) {
 }
 
 // Will be blocking during retries. Make sure to always call in Goroutine.
-func (m *Heart) trySendKeepAlive(ctx context.Context, locker sync.Locker) (err error) {
+func (m *Heart) trySendKeepAlive(ctx context.Context, _ sync.Locker) (err error) {
 	logger := liblog.WithContext(ctx)
 
-	liblog.WithContext(ctx).WithField("component", "Heart.Beat").Debug("sendKeepAlive - try get lock")
-	locker.Lock()
-	liblog.WithContext(ctx).WithField("component", "Heart.Beat").Debug("sendKeepAlive - lock acquired")
 	err = m.sendKeepAlive(ctx, m.appVersion)
-	locker.Unlock()
-	liblog.WithContext(ctx).WithField("component", "Heart.Beat").Debug("sendKeepAlive - lock released")
 	if err == nil {
 		// Make sure we flag the cache for refreshing now
 		m.c.invalidate()
