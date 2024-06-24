@@ -233,3 +233,5 @@ replace (
 	github.com/ethereum/go-ethereum => github.com/ethereum-optimism/op-geth v1.101311.0
 	github.com/roodeag/arbitrum => github.com/palomachain/arb-geth v0.0.0-20230824112942-8e77a580a936
 )
+
+replace github.com/palomachain/paloma => github.com/VolumeFi/paloma v1.5.0-next.0.20240625105200-3a8eb2249d7b

@@ -242,7 +242,7 @@ func (t compass) submitLogicCall(
 func (t compass) uploadSmartContract(
 	ctx context.Context,
 	queueTypeName string,
-	msg *evmtypes.UploadSmartContract,
+	msg evmtypes.SmartContractUploader,
 	origMessage chain.MessageWithSignatures,
 ) (*ethtypes.Transaction, error) {
 	constructorInput := msg.GetConstructorInput()
@@ -518,6 +518,25 @@ func (t compass) processMessages(ctx context.Context, queueTypeName string, msgs
 				ctx,
 				queueTypeName,
 				action.UploadSmartContract,
+				rawMsg,
+			)
+		case *evmtypes.Message_UploadUserSmartContract:
+			logger := logger.WithFields(log.Fields{
+				"chain-reference-id":     t.ChainReferenceID,
+				"queue-name":             queueTypeName,
+				"msg-id":                 rawMsg.ID,
+				"msg-bytes-to-sign":      rawMsg.BytesToSign,
+				"msg-msg":                rawMsg.Msg,
+				"msg-nonce":              rawMsg.Nonce,
+				"msg-public-access-data": rawMsg.PublicAccessData,
+				"message-type":           "Message_UploadUserSmartContract",
+			})
+			logger.Debug("switch-case-message-upload-user-contract")
+
+			tx, processingErr = t.uploadSmartContract(
+				ctx,
+				queueTypeName,
+				action.UploadUserSmartContract,
 				rawMsg,
 			)
 		default:
